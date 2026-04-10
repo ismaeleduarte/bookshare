@@ -16,6 +16,11 @@
   
 - if @books.count > 0
 
+  %p
+    Browse
+    = link_to "all books by subject", subjects_path
+    to find something to borrow.
+
   %table.book_grid
     %tr
     - i = 0
@@ -23,6 +28,14 @@
       - title = book.title
       - i += 1
       %td
-        = link_to (image_tag title.image_url, :height => 80, :alt => title.title_and_author), title
+        - if title.image_url.present?
+          = link_to (image_tag title.image_url, :height => 80, :alt => title.title_and_author), title
+        - else
+          = link_to title.title_and_author, title
       - if i % 10 == 0
         %tr
+- else
+  %p
+    No books are currently available.
+    = link_to "Register", :register
+    to share your books with the community.
