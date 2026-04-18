@@ -30,6 +30,11 @@ class BansController < ApplicationController
     @ban = Ban.new
     @user = User.find_by_login(params[:login])
 
+    if @user.nil?
+      redirect_to :back, :alert => "User not found"
+      return
+    end
+
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @ban }
@@ -41,6 +46,11 @@ class BansController < ApplicationController
   def create
     @ban = Ban.new
     @ban.user = User.find_by_login(params[:ban][:login])
+
+    if @ban.user.nil?
+      redirect_to :back, :alert => "User not found"
+      return
+    end
     @ban.reason = params[:ban][:reason]
     @ban.banner = current_user
 

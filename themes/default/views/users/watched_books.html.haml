@@ -21,7 +21,9 @@
           = book.title.subtitle
           %br
           %br
-          = link_to book.title.authors.first.name, author_path(book.title.authors.first)
+          - author = book.title.authors.first
+          - if author
+            = link_to author.name, author_path(author)
           %br
         %td
           = link_to image_tag(book.user.gravatar_image_url(60)), :controller => :members, :action => :show, :login => book.user.login

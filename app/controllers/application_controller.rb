@@ -25,6 +25,11 @@ class ApplicationController < ActionController::Base
         redirect_to new_user_session_url
         return false
       end
+      if current_user.banned?
+        flash[:alert] = "Your account has been banned"
+        redirect_to root_url
+        return false
+      end
     end
 
     def require_no_user

@@ -17,13 +17,18 @@ class LoansController < ApplicationController
   def create
     @loan = Loan.new(params[:loan])
     @loan.book = current_user.books.find(params[:book_id])
-    @loan.borrower = User.find_by_login(params[:borrower_login])
     @loan.lender = current_user
-    
+    @loan.borrower = User.find_by_login(params[:borrower_login])
+
+    if @loan.borrower.nil?
+      redirect_to new_loan_path(:book_id => params[:book_id]), :alert => "User '#{params[:borrower_login]}' not found"
+      return
+    end
+
     if @loan.save
       redirect_to :lent, :notice => "Book lent OK"
     else
-      redirect_to :books, :alert => "That didn't work"
+      redirect_to new_loan_path(:book_id => params[:book_id]), :alert => @loan.errors.full_messages.to_sentence
     end
   end
   

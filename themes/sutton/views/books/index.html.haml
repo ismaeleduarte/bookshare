@@ -34,7 +34,9 @@
           = book.title.subtitle
           %br
           %br
-          = link_to book.title.authors.first.name, author_path(book.title.authors.first)
+          - author = book.title.authors.first
+          - if author
+            = link_to author.name, author_path(author)
         %td
           - if book.status == StaticData::BOOK_STATUS['AVAILABLE']
             = link_to "Lend", new_loan_path(:book_id => book)

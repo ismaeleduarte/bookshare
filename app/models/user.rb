@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
   
   after_create :send_registration_confirmation, :promote_first_user
   
-#   attr_protected :status, :banned
+  attr_protected :status, :banned
 
   attr_accessible :login, :email, :first_name, :last_name, :address1, :address2, :city, :county, :postcode, :phone, :password, :password_confirmation
     

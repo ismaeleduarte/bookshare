@@ -16,10 +16,10 @@ class Ban < ActiveRecord::Base
   
   validates_presence_of :user, :banner, :reason
   
-  before_create :banner_must_be_admin,
-                :banner_must_not_be_banee,
-                :banee_must_not_already_be_banned,
-                :banee_must_not_be_admin
+  validate :banner_must_be_admin, :on => :create
+  validate :banner_must_not_be_banee, :on => :create
+  validate :banee_must_not_already_be_banned, :on => :create
+  validate :banee_must_not_be_admin, :on => :create
   
   after_create :set_user_as_banned
   
@@ -32,20 +32,19 @@ class Ban < ActiveRecord::Base
   end
   
   def banner_must_be_admin
-    @banner.admin?
+    errors.add(:banner, "must be an admin") unless banner && banner.admin?
   end
-  
-  # You can't ban yourself
+
   def banner_must_not_be_banee
-    @banner != @user
+    errors.add(:banner, "cannot ban themselves") if banner == user
   end
-  
+
   def banee_must_not_already_be_banned
-    !@user.banned?
+    errors.add(:user, "is already banned") if user && user.banned?
   end
-  
+
   def banee_must_not_be_admin
-    !@user.admin?
+    errors.add(:user, "cannot ban an admin") if user && user.admin?
   end
   
 end

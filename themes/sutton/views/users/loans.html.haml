@@ -21,7 +21,9 @@
           = book.title.subtitle
           %br
           %br
-          = link_to book.title.authors.first.name, author_path(book.title.authors.first)
+          - author = book.title.authors.first
+          - if author
+            = link_to author.name, author_path(author)
           %br
         %td
           = time_ago_in_words loan.created_at

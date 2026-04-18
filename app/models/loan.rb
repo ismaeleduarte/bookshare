@@ -14,7 +14,7 @@ class Loan < ActiveRecord::Base
   validate :borrower_cant_be_lender
   validate :lender_must_own_book
 
-  before_create :book_must_be_available
+  validate :book_must_be_available, :on => :create
   
   after_create :set_book_status_to_on_loan
               
@@ -34,7 +34,9 @@ class Loan < ActiveRecord::Base
   protected
   
   def book_must_be_available
-    book.available?
+    unless book.nil? || book.available?
+      errors.add(:book, "must be available to lend")
+    end
   end
   
   def set_book_status_to_on_loan
